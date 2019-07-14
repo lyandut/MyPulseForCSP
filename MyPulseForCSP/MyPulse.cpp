@@ -4,9 +4,7 @@ MyPulse::MyPulse(ID src, ID dst, AdjList<ID, Weight, Resource> &adjList, List<Re
 	: src(src), dst(dst), adjList(adjList), max_capacity(max_capacity) {
 	node_num = int(adjList.size());
 	resource_num = int(max_capacity.size());
-	dual_bound = INF;
-	primal_bound = 0;
-	visited_label.resize(node_num);
+	primal_bound = INF;
 }
 
 bool MyPulse::checkDominance(ID curr, Weight cost, List<Resource>& consumptions) {
@@ -30,34 +28,29 @@ void MyPulse::pulseProcedure(ID curr, Weight cost, List<Resource> &consumptions,
 	path.nodes.push_back(curr);
 	Path<ID, Weight> opt_path;
 	for (auto next : adjList[curr]) {
-		if (visited_label[next.dst].vis) { continue; }
 		Path<ID, Weight> new_path(path);
 		Weight new_cost = cost + next.weight;
 		List<Resource> new_consumptions(consumptions);
-		for (ID rsc_id = 0; rsc_id < resource_num; ++rsc_id) { new_consumptions[rsc_id] += next.consumptions[rsc_id]; }
+		for (ID rsc_id = 0; rsc_id < resource_num; ++rsc_id) { 
+			new_consumptions[rsc_id] += next.consumptions[rsc_id]; 
+		}
 		
-		visited_label[next.dst].vis = true;
 		new_path.distance += next.weight;
 		pulseProcedure(next.dst, new_cost, new_consumptions, new_path);
-		visited_label[next.dst].vis = false;
-		new_path.distance -= next.weight;
 	
-		if (!new_path.nodes.empty() && new_path.nodes.back() == dst && (opt_path.nodes.empty() || new_path.distance < opt_path.distance)) {
-			opt_path = new_path;
-		}
+		if (!new_path.nodes.empty() && new_path.nodes.back() == dst && 
+			(opt_path.nodes.empty() || new_path.distance < opt_path.distance)
+			) { opt_path = new_path; }
 	}
 	if (path.nodes.back() != dst) { path = opt_path; }
-	if (!path.nodes.empty() && path.nodes.back() == dst && path.distance < primal_bound) { primal_bound = path.distance; }
-}
-
-void MyPulse::reset_label() {
-	for (auto each : visited_label) {
-		each.vis = false;
+	if (!path.nodes.empty() && path.nodes.back() == dst && path.distance < primal_bound) { 
+		primal_bound = path.distance;
+		//std::cout << "new primal bound: " << primal_bound << std::endl;
 	}
 }
 
 void MyPulse::initialization() {
-	opt_path = Path<ID, Weight>(0, List<ID>());
+	opt_path.distance = 0;
 	opt_path.nodes.reserve(node_num);
 	cumulative_cost = 0;
 	cumulative_consumptions.resize(resource_num, 0);
@@ -68,21 +61,52 @@ void MyPulse::initialization() {
 			reverseGraph[each.dst].emplace_back(id, each.weight, each.consumptions);
 		}
 	}
-	dijkstra(dst);
+	lower_bound_cost.resize(node_num, 0);
+	lower_bound_consumptions.resize(node_num, List<Resource>(resource_num, 0));
+	for (ID i = -1; i < resource_num; ++i) { 
+		dijkstra(dst, i); 
+	}
 }
 
-void MyPulse::dijkstra(ID start) {
-
+void MyPulse::dijkstra(ID s, ID rsc_id) {
+	List<ID> predecessor(node_num);
+	List<Vertex> vertexes(node_num);
+	for (ID i = 0; i < node_num; ++i) {
+		vertexes[i].id = i;
+		vertexes[i].dist = INF;
+	}
+	PriorityQueue<Vertex> queue;
+	vertexes[s].dist = 0;
+	queue.push(vertexes[s]);
+	while (!queue.empty()) {
+		Vertex minVertex = queue.top(); queue.pop();
+		for (int i = 0; i < reverseGraph[minVertex.id].size(); ++i) {
+			AdjNode<ID, Weight, Resource> e = reverseGraph[minVertex.id][i];
+			Vertex &nextVertex = vertexes[e.dst];
+			auto new_dist = rsc_id < 0 ? (minVertex.dist + e.weight) : (minVertex.dist + e.consumptions[rsc_id]);
+			if (new_dist < nextVertex.dist) {
+				nextVertex.dist = new_dist;
+				predecessor[nextVertex.id] = minVertex.id;
+				queue.push(nextVertex);
+			}
+		}
+	}
+	if (rsc_id < 0) {
+		for (ID i = 0; i < node_num; ++i) { lower_bound_cost[i] = vertexes[i].dist; }
+	}
+	else {
+		for (ID i = 0; i < node_num; ++i) { lower_bound_consumptions[i][rsc_id] = vertexes[i].dist; }
+	}
 }
 
-void MyPulse::run() {
-	std::cout<<"---------initialization begin---------\n";
+void MyPulse::run(Weight result) {
+	//std::cout<<"---------initialization begin---------\n";
 	initialization();
-	std::cout<<"---------initialization end---------\n";
-	
-	visited_label[src].vis = true;
+	//std::cout<<"---------initialization end---------\n";
+
 	pulseProcedure(src, cumulative_cost, cumulative_consumptions, opt_path);
 
+	std::cout << "opt result: " << result << std::endl;
 	std::cout << "min cost: " << opt_path.distance << std::endl;
 
 	std::cout << "optimal path: ";

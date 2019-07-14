@@ -145,10 +145,26 @@
     <ClInclude Include="MyConfig.h" />
     <ClInclude Include="MyPulse.h" />
     <ClInclude Include="rcspp.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyPulse.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\RCosts.txt" />
+    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp11.txt" />
+    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp12.txt" />
+    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp15.txt" />
+    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp16.txt" />
+    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp19.txt" />
+    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp20.txt" />
+    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp23.txt" />
+    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp24.txt" />
+    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp3.txt" />
+    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp4.txt" />
+    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp7.txt" />
+    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp8.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

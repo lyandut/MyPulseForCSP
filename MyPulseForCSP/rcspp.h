@@ -21,7 +21,7 @@ template<typename ID, typename Weight>
 struct Path {
     Weight distance;
     List<ID> nodes; // `nodes[i]` is the `i`_th node visited in the tour.
-	Path() : distance(0) { }
+	Path() { }
 	Path(Weight d, List<ID> &n) : distance(d), nodes(n) { }
 };
 
