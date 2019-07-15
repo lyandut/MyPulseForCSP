@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyPulse.cpp" />
+    <ClCompile Include="rcspp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Instance\Zhu-Wilhelm-Testbed\RCosts.txt" />

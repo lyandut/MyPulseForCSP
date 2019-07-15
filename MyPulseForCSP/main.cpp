@@ -1,21 +1,13 @@
+#include <iostream>
 #include <sstream>
 #include <fstream>
-#include <ctime>
 #include <string>
-#include <map>
+#include <ctime>
+#include "rcspp.h"
 #include "MyPulse.h"
 #include "MyConfig.h"
 
 using namespace lyan;
-
-static std::map<std::string, Weight> resultMap = { 
-	{ "rcsp1.txt", 131 },{ "rcsp2.txt", 131 },{ "rcsp3.txt", 2 },{ "rcsp4.txt", 2 },
-	{ "rcsp5.txt", 100 },{ "rcsp6.txt", 100 },{ "rcsp7.txt", 6 },{ "rcsp8.txt", 14 },
-	{ "rcsp9.txt", 420 },{ "rcsp10.txt", 420 },{ "rcsp11.txt", 6 },{ "rcsp12.txt", 6 },
-	{ "rcsp13.txt", 448 }, { "rcsp14.txt", INF }, { "rcsp15.txt", 9 }, { "rcsp16.txt", 17 },
-	{ "rcsp17.txt", 652 }, { "rcsp18.txt", 652 }, { "rcsp19.txt", 6 }, { "rcsp20.txt", 6 },
-	{ "rcsp21.txt", 858 }, { "rcsp22.txt", 858 }, { "rcsp23.txt", 4 }, { "rcsp24.txt", 5 }
-};
 
 bool reader(std::string &filename, AdjList<ID, Weight, Resource> &adjList, List<Resource> &max_capacity) {
 	std::ifstream file(filename);
@@ -75,26 +67,29 @@ void runAllInstance() {
 }
 
 
-int main(int args, char *argv[]) {
-	
-	runAllInstance();
-	
-	//std::string instance = argv[1];
-	//std::string instance("rcsp23.txt");
-	//std::string filename = std::string("../Instance/Zhu-Wilhelm-Testbed/") + instance;
+int main(int argc, char *argv[]) {
 
-	//AdjList<ID, Weight, Resource> adjList;
-	//List<Resource> max_capacity;
-	//reader(filename, adjList, max_capacity);
+	if (argc == 1) { 
+		runAllInstance(); 
+	} 
+	else {
+		std::string instance = argv[1];
+		std::string filename = std::string("../Instance/Zhu-Wilhelm-Testbed/") + instance;
 
-	//int node_num = int(adjList.size());
-	//MyPulse myPulse(0, node_num - 1, adjList, max_capacity);
-
-	//double duration;
-	//std::clock_t start = std::clock();
-	//myPulse.run(resultMap[instance]);
-	//duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-	//std::cout << instance + " duration: " << duration << std::endl;
+		Path<ID, Weight> opt_path;
+		AdjList<ID, Weight, Resource> adjList;
+		List<Resource> max_capacity;
+		reader(filename, adjList, max_capacity);
+		ID src = 0, dst = int(adjList.size()) - 1;
+		
+		if (resourceConstrainedShortestPath(opt_path, adjList, src, dst, max_capacity)) {
+			std::cout << "opt cost: " << opt_path.distance << std::endl;
+			std::cout << "optimal path: ";
+			for (ID i : opt_path.nodes) { std::cout << i << " "; }
+			std::cout << std::endl;
+		}
+		else { std::cout << src << "->" << dst << " has no shortest path!" << std::endl; }
+	}
 
 	system("PAUSE");
 	return 0;

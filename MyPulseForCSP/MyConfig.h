@@ -1,6 +1,7 @@
 #pragma once
 
 #include <queue>
+#include <map>
 
 namespace lyan {
 	using ID = int;
@@ -10,4 +11,13 @@ namespace lyan {
 	
 	template <typename T>
 	using PriorityQueue = std::priority_queue<T>;
+
+	static std::map<std::string, Weight> resultMap = {
+		{ "rcsp1.txt", 131 },{ "rcsp2.txt", 131 },{ "rcsp3.txt", 2 },{ "rcsp4.txt", 2 },
+		{ "rcsp5.txt", 100 },{ "rcsp6.txt", 100 },{ "rcsp7.txt", 6 },{ "rcsp8.txt", 14 },
+		{ "rcsp9.txt", 420 },{ "rcsp10.txt", 420 },{ "rcsp11.txt", 6 },{ "rcsp12.txt", 6 },
+		{ "rcsp13.txt", 448 },{ "rcsp14.txt", INF },{ "rcsp15.txt", 9 },{ "rcsp16.txt", 17 },
+		{ "rcsp17.txt", 652 },{ "rcsp18.txt", 652 },{ "rcsp19.txt", 6 },{ "rcsp20.txt", 6 },
+		{ "rcsp21.txt", 858 },{ "rcsp22.txt", 858 },{ "rcsp23.txt", 4 },{ "rcsp24.txt", 5 }
+	};
 }

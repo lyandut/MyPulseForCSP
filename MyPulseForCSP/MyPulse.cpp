@@ -1,17 +1,18 @@
 #include "MyPulse.h"
 
-MyPulse::MyPulse(ID src, ID dst, AdjList<ID, Weight, Resource> &adjList, List<Resource> &max_capacity)
+MyPulse::MyPulse(ID src, ID dst, const AdjList<ID, Weight, Resource> &adjList, const List<Resource> &max_capacity)
 	: src(src), dst(dst), adjList(adjList), max_capacity(max_capacity) {
 	node_num = int(adjList.size());
 	resource_num = int(max_capacity.size());
 	primal_bound = INF;
+	visited.resize(node_num, 0);
 }
 
 bool MyPulse::compareResources(List<Resource>& r1, List<Resource>& r2) {
 	for (ID rsc_id = 0; rsc_id < resource_num; ++rsc_id) {
-		if (r1[rsc_id] >= r2[rsc_id]) { return false; }
+		if (r1[rsc_id] > r2[rsc_id]) { return true; }
 	}
-	return true;
+	return false;
 }
 
 void MyPulse::changeLabels(ID curr, Weight cost, List<Resource>& consumptions) {
@@ -21,7 +22,7 @@ void MyPulse::changeLabels(ID curr, Weight cost, List<Resource>& consumptions) {
 		dominance_labels[curr][0].resource = consumptions;
 	}
 	// Stores the best consumptions
-	else if (compareResources(consumptions, dominance_labels[curr][1].resource)) {
+	else if (compareResources(dominance_labels[curr][1].resource, consumptions)) {
 		dominance_labels[curr][1].cost = cost;
 		dominance_labels[curr][1].resource = consumptions;
 	}
@@ -33,9 +34,9 @@ void MyPulse::changeLabels(ID curr, Weight cost, List<Resource>& consumptions) {
 }
 
 bool MyPulse::checkDominance(ID curr, Weight cost, List<Resource>& consumptions) {
-	if ((cost >= dominance_labels[curr][0].cost || !compareResources(consumptions, dominance_labels[curr][0].resource)) 
-		&& (cost >= dominance_labels[curr][1].cost || !compareResources(consumptions, dominance_labels[curr][1].resource))
-	    && (cost >= dominance_labels[curr][2].cost || !compareResources(consumptions, dominance_labels[curr][2].resource))
+	if ((cost > dominance_labels[curr][0].cost || compareResources(consumptions, dominance_labels[curr][0].resource)) 
+	&&  (cost > dominance_labels[curr][1].cost || compareResources(consumptions, dominance_labels[curr][1].resource))
+	&&  (cost > dominance_labels[curr][2].cost || compareResources(consumptions, dominance_labels[curr][2].resource))
 		) { return false; }
 	return true;
 }
@@ -56,21 +57,23 @@ void MyPulse::pulseProcedure(ID curr, Weight cost, List<Resource> &consumptions,
 	if (!checkDominance(curr, cost, consumptions) || !checkFeasibility(curr, consumptions) || !checkBounds(curr, cost)) { return; }
 	changeLabels(curr, cost, consumptions);
 	path.nodes.push_back(curr);
-	Path<ID, Weight> opt_path;
+	Path<ID, Weight> opt_path; opt_path.distance = INF;
 	for (auto next : adjList[curr]) {
-		Path<ID, Weight> new_path(path);
+		if (visited[next.dst]) { continue; }
+
 		Weight new_cost = cost + next.weight;
 		List<Resource> new_consumptions(consumptions);
-		for (ID rsc_id = 0; rsc_id < resource_num; ++rsc_id) { 
-			new_consumptions[rsc_id] += next.consumptions[rsc_id]; 
-		}
-		
+		for (ID rsc_id = 0; rsc_id < resource_num; ++rsc_id) { new_consumptions[rsc_id] += next.consumptions[rsc_id]; }
+		Path<ID, Weight> new_path(path);
 		new_path.distance += next.weight;
+
+		visited[next.dst] = 1;
 		pulseProcedure(next.dst, new_cost, new_consumptions, new_path);
+		visited[next.dst] = 0;
 	
-		if (!new_path.nodes.empty() && new_path.nodes.back() == dst && 
-			(opt_path.nodes.empty() || new_path.distance < opt_path.distance)
-			) { opt_path = new_path; }
+		if (!new_path.nodes.empty() && new_path.nodes.back() == dst && new_path.distance < opt_path.distance) { 
+			opt_path = new_path; 
+		}
 	}
 	if (path.nodes.back() != dst) { path = opt_path; }
 	if (!path.nodes.empty() && path.nodes.back() == dst && path.distance < primal_bound) { 
@@ -128,46 +131,20 @@ void MyPulse::dijkstra(ID s, ID rsc_id) {
 	}
 }
 
-void MyPulse::run(Weight result) {
+void MyPulse::run() {
 	//std::cout<<"---------initialization begin---------\n";
 	initialization();
 	//std::cout<<"---------initialization end---------\n";
-
+	visited[src] = 1;
 	pulseProcedure(src, 0, List<Resource>(resource_num, 0), opt_path);
+}
 
-	std::cout << "opt result: " << result << std::endl;
-	std::cout << "min cost: " << opt_path.distance << std::endl;
+void MyPulse::run(Weight result) {
+	run();
 
+	std::cout << "ref cost: " << result << std::endl;
+	std::cout << "opt cost: " << opt_path.distance << std::endl;
 	std::cout << "optimal path: ";
 	for (ID i : opt_path.nodes) { std::cout << i << " "; }
 	std::cout << std::endl;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

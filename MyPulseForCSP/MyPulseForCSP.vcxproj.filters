@@ -32,6 +32,9 @@
     <ClCompile Include="MyPulse.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="rcspp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Instance\Zhu-Wilhelm-Testbed\RCosts.txt">

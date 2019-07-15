@@ -28,8 +28,7 @@ private:
 	AdjList<ID, Weight, Resource> adjList;
 	List<Resource> max_capacity;
 	Weight primal_bound;
-	
-	Path<ID, Weight> opt_path;
+	List<int> visited;
 	
 	AdjList<ID, Weight, Resource> reverseGraph;
 	/* 
@@ -55,7 +54,7 @@ private:
 
 	void pulseProcedure(ID curr, Weight cost, List<Resource> &consumptions, Path<ID, Weight> &path);
 	
-	// return true if `r2` is dominated by `r1`.
+	// return true if `r1` is strongly dominated by `r2`. (`r1` > `r2`)
 	bool compareResources(List<Resource>& r1, List<Resource>& r2);
 	void changeLabels(ID curr, Weight cost, List<Resource> &consumptions);
 	
@@ -64,6 +63,9 @@ private:
 	bool checkBounds(ID curr, Weight cost);
 
 public:
-	MyPulse(ID src, ID dst, AdjList<ID, Weight, Resource> &adjList, List<Resource> &max_capacity);
+	Path<ID, Weight> opt_path;
+
+	MyPulse(ID src, ID dst, const AdjList<ID, Weight, Resource> &adjList, const List<Resource> &max_capacity);
+	void run();
 	void run(Weight result);
 };
