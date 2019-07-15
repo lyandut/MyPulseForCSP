@@ -145,7 +145,6 @@
     <ClInclude Include="MyConfig.h" />
     <ClInclude Include="MyPulse.h" />
     <ClInclude Include="rcspp.h" />
-    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

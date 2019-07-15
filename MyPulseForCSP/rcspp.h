@@ -29,4 +29,6 @@ struct Path {
 // the total resource consumption on the resulting `path` from `src` to `dst` should be less than `capacity`.
 // return false if there is no feasible path between `src` and `dst`.
 template<typename ID, typename Weight, typename Resource>
-bool resourceConstrainedShortestPath(Path<ID, Weight> &path, const AdjList<ID, Weight, Resource> &adjList, ID src, ID dst, List<Resource> capacity);
+bool resourceConstrainedShortestPath(Path<ID, Weight> &path, const AdjList<ID, Weight, Resource> &adjList, ID src, ID dst, List<Resource> capacity) {
+	
+}

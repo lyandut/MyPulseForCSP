@@ -7,7 +7,36 @@ MyPulse::MyPulse(ID src, ID dst, AdjList<ID, Weight, Resource> &adjList, List<Re
 	primal_bound = INF;
 }
 
+bool MyPulse::compareResources(List<Resource>& r1, List<Resource>& r2) {
+	for (ID rsc_id = 0; rsc_id < resource_num; ++rsc_id) {
+		if (r1[rsc_id] >= r2[rsc_id]) { return false; }
+	}
+	return true;
+}
+
+void MyPulse::changeLabels(ID curr, Weight cost, List<Resource>& consumptions) {
+	// Stores the best cost
+	if (cost < dominance_labels[curr][0].cost) {
+		dominance_labels[curr][0].cost = cost;
+		dominance_labels[curr][0].resource = consumptions;
+	}
+	// Stores the best consumptions
+	else if (compareResources(consumptions, dominance_labels[curr][1].resource)) {
+		dominance_labels[curr][1].cost = cost;
+		dominance_labels[curr][1].resource = consumptions;
+	}
+	// Replaces the third label
+	else {
+		dominance_labels[curr][2].cost = cost;
+		dominance_labels[curr][2].resource = consumptions;
+	}
+}
+
 bool MyPulse::checkDominance(ID curr, Weight cost, List<Resource>& consumptions) {
+	if ((cost >= dominance_labels[curr][0].cost || !compareResources(consumptions, dominance_labels[curr][0].resource)) 
+		&& (cost >= dominance_labels[curr][1].cost || !compareResources(consumptions, dominance_labels[curr][1].resource))
+	    && (cost >= dominance_labels[curr][2].cost || !compareResources(consumptions, dominance_labels[curr][2].resource))
+		) { return false; }
 	return true;
 }
 
@@ -25,6 +54,7 @@ bool MyPulse::checkBounds(ID curr, Weight cost) {
 
 void MyPulse::pulseProcedure(ID curr, Weight cost, List<Resource> &consumptions, Path<ID, Weight> &path) {
 	if (!checkDominance(curr, cost, consumptions) || !checkFeasibility(curr, consumptions) || !checkBounds(curr, cost)) { return; }
+	changeLabels(curr, cost, consumptions);
 	path.nodes.push_back(curr);
 	Path<ID, Weight> opt_path;
 	for (auto next : adjList[curr]) {
@@ -52,8 +82,6 @@ void MyPulse::pulseProcedure(ID curr, Weight cost, List<Resource> &consumptions,
 void MyPulse::initialization() {
 	opt_path.distance = 0;
 	opt_path.nodes.reserve(node_num);
-	cumulative_cost = 0;
-	cumulative_consumptions.resize(resource_num, 0);
 
 	reverseGraph.resize(node_num);
 	for (ID id = 0; id < node_num; ++id) {
@@ -61,6 +89,7 @@ void MyPulse::initialization() {
 			reverseGraph[each.dst].emplace_back(id, each.weight, each.consumptions);
 		}
 	}
+	dominance_labels.resize(node_num, List<Label>(3, { INF, List<Resource>(resource_num, INF) }));
 	lower_bound_cost.resize(node_num, 0);
 	lower_bound_consumptions.resize(node_num, List<Resource>(resource_num, 0));
 	for (ID i = -1; i < resource_num; ++i) { 
@@ -104,7 +133,7 @@ void MyPulse::run(Weight result) {
 	initialization();
 	//std::cout<<"---------initialization end---------\n";
 
-	pulseProcedure(src, cumulative_cost, cumulative_consumptions, opt_path);
+	pulseProcedure(src, 0, List<Resource>(resource_num, 0), opt_path);
 
 	std::cout << "opt result: " << result << std::endl;
 	std::cout << "min cost: " << opt_path.distance << std::endl;

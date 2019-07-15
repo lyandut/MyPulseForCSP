@@ -53,9 +53,7 @@ bool reader(std::string &filename, AdjList<ID, Weight, Resource> &adjList, List<
 	return true;
 }
 
-
-int main(int args, char *argv[]) {
-	//std::string filename = argv[1];
+void runAllInstance() {
 	for (auto each : resultMap) {
 
 		std::string instance(each.first);
@@ -74,6 +72,29 @@ int main(int args, char *argv[]) {
 		duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 		std::cout << instance + " duration: " << duration << std::endl;
 	}
+}
+
+
+int main(int args, char *argv[]) {
+	
+	runAllInstance();
+	
+	//std::string instance = argv[1];
+	//std::string instance("rcsp23.txt");
+	//std::string filename = std::string("../Instance/Zhu-Wilhelm-Testbed/") + instance;
+
+	//AdjList<ID, Weight, Resource> adjList;
+	//List<Resource> max_capacity;
+	//reader(filename, adjList, max_capacity);
+
+	//int node_num = int(adjList.size());
+	//MyPulse myPulse(0, node_num - 1, adjList, max_capacity);
+
+	//double duration;
+	//std::clock_t start = std::clock();
+	//myPulse.run(resultMap[instance]);
+	//duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+	//std::cout << instance + " duration: " << duration << std::endl;
 
 	system("PAUSE");
 	return 0;
