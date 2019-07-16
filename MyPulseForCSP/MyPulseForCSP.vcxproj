@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="MyConfig.h" />
     <ClInclude Include="MyPulse.h" />
+    <ClInclude Include="MyUtils.h" />
     <ClInclude Include="rcspp.h" />
   </ItemGroup>
   <ItemGroup>
@@ -152,7 +153,6 @@
     <ClCompile Include="rcspp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\RCosts.txt" />
     <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp11.txt" />
     <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp12.txt" />
     <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp15.txt" />

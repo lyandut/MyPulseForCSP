@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <queue>
 #include <map>
 
@@ -7,7 +8,11 @@ namespace lyan {
 	using ID = int;
 	using Weight = int;
 	using Resource = int;
+	
 	const int INF = 0x3f3f3f3f;
+	const int MAX_RSC_NUM = 10;
+	const std::string INSTANCE_FOLDER = "D:\\My.C++\\MyPulseForCSP\\Instance\\Zhu_Wilhelm_DIMACS\\";
+	const std::string SOLUTION_FILE = "D:\\My.C++\\MyPulseForCSP\\Solution\\log.csv";
 	
 	template <typename T>
 	using PriorityQueue = std::priority_queue<T>;

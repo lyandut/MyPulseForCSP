@@ -24,6 +24,9 @@
     <ClInclude Include="MyConfig.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MyUtils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -37,9 +40,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\RCosts.txt">
-      <Filter>资源文件</Filter>
-    </Text>
     <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp3.txt">
       <Filter>资源文件</Filter>
     </Text>
