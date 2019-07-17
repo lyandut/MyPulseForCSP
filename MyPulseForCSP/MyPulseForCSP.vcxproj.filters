@@ -39,42 +39,4 @@
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp3.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp4.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp7.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp8.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp11.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp12.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp15.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp16.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp19.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp20.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp23.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-    <Text Include="..\Instance\Zhu-Wilhelm-Testbed\rcsp24.txt">
-      <Filter>资源文件</Filter>
-    </Text>
-  </ItemGroup>
 </Project>
