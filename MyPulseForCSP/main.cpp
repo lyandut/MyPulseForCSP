@@ -3,6 +3,7 @@
 #include <sstream>
 #include <fstream>
 #include <ctime>
+#include <cmath>
 #include <windows.h>
 #include "rcspp.h"
 #include "MyPulse.h"
@@ -57,6 +58,60 @@ bool reader(std::string filename, AdjList<ID, Weight, Resource> &adjList, List<R
 		else { adjList[tail].emplace_back(head, distance, rcsConsumedList); }
 	}
 	return true;
+}
+
+// SantosTestbed
+void runSantosTestbed() {
+	std::string file1_name = "D:\\My.C++\\MyPulseForCSP\\Instance\\SantosTestbed\\File1.txt";
+	std::string file2_name = "D:\\My.C++\\MyPulseForCSP\\Instance\\SantosTestbed\\File2.TXT";
+	std::string file3_name = "D:\\My.C++\\MyPulseForCSP\\Instance\\SantosTestbed\\File3.TXT";
+	std::ifstream file1(file1_name); std::ifstream file2(file2_name); std::ifstream file3(file3_name);
+	if (!file1.is_open() || !file2.is_open() || !file3.is_open()) {
+		std::cout << "files open failed!" << std::endl;
+		return;
+	}
+
+	// Read File1.txt 
+	// pathA: lower_bound_cost, pathB: lower_bound_consumptions.
+	int network_id, node_num, edge_num, sum_time_pathA, sum_time_pathB;
+	ID src = 1, dst;
+	file1 >> network_id >> node_num >> edge_num >> sum_time_pathA >> sum_time_pathB >> dst;
+	double P = 0.1; // (p = 0.1, 0.2, 0.4, 0.6, and 0.8)
+	List<Resource> max_capacity(1, round(P*(sum_time_pathA - sum_time_pathB)) + sum_time_pathB);
+
+	// Read File2.TXT
+	int network_id_2, index = 1;
+	List<ID> head(node_num + 2, 0);
+	file2 >> network_id_2;
+	while (network_id_2 == network_id) {
+		file2 >> head[index++];
+		file2 >> network_id_2;
+	}
+
+	// Read File3.TXT
+	int network_id_3; ID to; Weight cost; Resource time;
+	AdjList<ID, Weight, Resource> adjList(node_num + 1);
+	int i = 1, i_edge_num = head[i + 1] - head[i];
+	file3 >> network_id_3;
+	while (network_id_3 == network_id) {
+		file3 >> to >> cost >> time;
+		while (i_edge_num == 0) {
+			i += 1;
+			i_edge_num = head[i + 1] - head[i];
+		}
+		adjList[i].emplace_back(to, cost, List<Resource>(1, time));
+		i_edge_num--;
+		file3 >> network_id_3;
+	}
+	
+	Path<ID, Weight> opt_path;
+	if (resourceConstrainedShortestPath(opt_path, adjList, src, dst, max_capacity)) {
+		std::cout << "opt cost: " << opt_path.distance << std::endl;
+		std::cout << "optimal path: ";
+		for (ID i : opt_path.nodes) { std::cout << i << " "; }
+		std::cout << std::endl;
+	}
+	else { std::cout << src << "->" << dst << " has no shortest path!" << std::endl; }
 }
 
 void runAllInstance() {
@@ -114,8 +169,9 @@ void runAllInstance() {
 int main(int argc, char *argv[]) {
 
 	if (argc == 1) { 
-		runAllInstance(); 
+		//runAllInstance(); 
 		//renameInstance();
+		runSantosTestbed();
 	} 
 	else {
 		std::string instance = argv[1];
