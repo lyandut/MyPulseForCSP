@@ -11,8 +11,10 @@ namespace lyan {
 	
 	const int INF = 0x3f3f3f3f;
 	const int MAX_RSC_NUM = 10;
-	const std::string INSTANCE_FOLDER = "D:\\My.C++\\MyPulseForCSP\\Instance\\Zhu_Wilhelm_DIMACS\\";
-	const std::string SOLUTION_FILE = "D:\\My.C++\\MyPulseForCSP\\Solution\\log.csv";
+	const std::string Zhu_Wilhelm_TYPE   = "Zhu_Wilhelm_Testbed";
+	const std::string Zhu_Wilhelm_FOLDER = "D:\\My.C++\\MyPulseForCSP\\Instance\\" + Zhu_Wilhelm_TYPE +"\\";
+	const std::string Santos_FOLDER      = "D:\\My.C++\\MyPulseForCSP\\Instance\\SantosTestbed\\";
+	const std::string SOLUTION_FILE      = "D:\\My.C++\\MyPulseForCSP\\Solution\\log.csv";
 	
 	template <typename T>
 	using PriorityQueue = std::priority_queue<T>;

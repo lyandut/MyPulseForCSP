@@ -3,7 +3,7 @@
 #include <io.h>
 
 void renameInstance() {
-	std::string folder = INSTANCE_FOLDER + "*.*";
+	std::string folder = Zhu_Wilhelm_FOLDER + "*.*";
 	_finddata_t file_data;
 	auto handler = _findfirst(folder.c_str(), &file_data);
 	if (handler == -1) {
@@ -12,9 +12,9 @@ void renameInstance() {
 	}
 	while (_findnext(handler, &file_data) == 0) {
 		if (strcmp(file_data.name, ".") == 0 || strcmp(file_data.name, "..") == 0) { continue; }
-		if (strstr(file_data.name, "Zhu_Wilhelm_Testbed")) { continue; }
+		if (strstr(file_data.name, Zhu_Wilhelm_TYPE.c_str())) { continue; }
 
-		std::string filename = INSTANCE_FOLDER + file_data.name;
+		std::string filename = Zhu_Wilhelm_FOLDER + file_data.name;
 		std::ifstream file(filename);
 		if (!file.is_open()) {
 			std::cout << filename << " open failed!" << std::endl;
@@ -51,8 +51,8 @@ void renameInstance() {
 		max_capacity = *std::max_element(capacity.begin(), capacity.end());
 		file.close();
 
-		std::string old_file_name = INSTANCE_FOLDER + file_data.name;
-		std::string new_file_name = INSTANCE_FOLDER + "Zhu_Wilhelm_Testbed"
+		std::string old_file_name = Zhu_Wilhelm_FOLDER + file_data.name;
+		std::string new_file_name = Zhu_Wilhelm_FOLDER + Zhu_Wilhelm_TYPE
 			+ ".n" + std::to_string(node_num) + "e" + std::to_string(edge_num) 
 			+ "c" + std::to_string(max_capacity) + "." + file_data.name;
 		std::cout << old_file_name << std::endl;

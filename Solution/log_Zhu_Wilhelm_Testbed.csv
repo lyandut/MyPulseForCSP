@@ -1,0 +1,13 @@
+Instance,OptCost,Duration,Solution
+Zhu_Wilhelm_Testbed.n100e959c15.rcsp4.txt,2,0.00929,0 18 27 50 75 87 97 99 
+Zhu_Wilhelm_Testbed.n100e959c17.rcsp3.txt,2,0.00970,0 18 27 50 75 87 97 99 
+Zhu_Wilhelm_Testbed.n100e999c24.rcsp8.txt,14,0.01820,0 22 44 68 85 99 
+Zhu_Wilhelm_Testbed.n100e999c27.rcsp7.txt,6,0.01128,0 13 31 43 60 74 99 
+Zhu_Wilhelm_Testbed.n200e1960c19.rcsp16.txt,17,0.00942,0 34 79 126 167 199 
+Zhu_Wilhelm_Testbed.n200e1960c22.rcsp15.txt,9,0.03255,0 34 62 108 158 199 
+Zhu_Wilhelm_Testbed.n200e1971c24.rcsp12.txt,6,0.00743,0 9 32 62 111 118 165 199 
+Zhu_Wilhelm_Testbed.n200e1971c27.rcsp11.txt,6,0.01418,0 9 32 62 111 118 165 199 
+Zhu_Wilhelm_Testbed.n500e4868c25.rcsp24.txt,5,0.06606,0 27 147 269 389 499 
+Zhu_Wilhelm_Testbed.n500e4868c28.rcsp23.txt,4,0.06007,0 27 141 237 347 454 499 
+Zhu_Wilhelm_Testbed.n500e4978c19.rcsp20.txt,6,0.01075,0 110 145 204 327 336 409 443 499 
+Zhu_Wilhelm_Testbed.n500e4978c22.rcsp19.txt,6,0.00961,0 13 112 166 215 325 354 440 499 
