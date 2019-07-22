@@ -156,7 +156,7 @@ void runSantosTestbed(double P) {
 		}
 
 		std::string instance_name = "SantosTestbed" + std::to_string(network_id) 
-			+ ".p" + std::to_string(P) + "n" + std::to_string(node_num) 
+			+ ".p" + std::to_string(int(P*10)) + "n" + std::to_string(node_num) 
 			+ "e" + std::to_string(edge_num) + "c" + std::to_string(max_capacity[0]);
 
 		MyPulse myPulse(src, dst, adjList, max_capacity);
@@ -172,17 +172,17 @@ void runSantosTestbed(double P) {
 		QueryPerformanceCounter(&t2);
 		//duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 		duration = (t2.QuadPart - t1.QuadPart) / (double)nFreq.QuadPart;
-		std::cout << instance_name << " duration: " << duration << std::endl;
+		//std::cout << instance_name << " duration: " << duration << std::endl;
 
 		// record solution
 		std::ostringstream log;
-		log << instance_name << "," << P << "," << myPulse.opt_path.distance << ","
-			<< std::setiosflags(std::ios::fixed) << std::setprecision(5) << duration << ",";
+		log << instance_name << "," << myPulse.opt_path.distance << ","
+			<< std::setiosflags(std::ios::fixed) << std::setprecision(2) << duration << ",";
 		for (ID i : myPulse.opt_path.nodes) { log << i << " "; }
 		log << std::endl;
 
 		logFile.seekp(0, std::ios::end);
-		if (logFile.tellp() <= 0) { logFile << "Instance,P,OptCost,Duration,Solution" << std::endl; }
+		if (logFile.tellp() <= 0) { logFile << "Instance,OptCost,Duration,Solution" << std::endl; }
 		logFile << log.str();
 	}
 	logFile.close();
@@ -193,11 +193,11 @@ int main(int argc, char *argv[]) {
 	if (argc == 1) { 
 		//renameInstance();
 		//runZhuWilhelm();
-		runSantosTestbed(0.1); // (p = 0.1, 0.2, 0.4, 0.6, and 0.8)
+		runSantosTestbed(0.8); // (p = 0.1, 0.2, 0.4, 0.6, and 0.8)
 	} 
 	else {
 		std::string instance = argv[1];
-		std::string filename = std::string("../Instance/Zhu_Wilhelm_Testbed/") + instance;
+		std::string filename = Zhu_Wilhelm_FOLDER + instance;
 
 		Path<ID, Weight> opt_path;
 		AdjList<ID, Weight, Resource> adjList;

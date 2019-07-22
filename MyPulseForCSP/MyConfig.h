@@ -9,15 +9,16 @@ namespace lyan {
 	using Weight = int;
 	using Resource = int;
 	
+	template <typename T>
+	using PriorityQueue = std::priority_queue<T>;
+	
 	const int INF = 0x3f3f3f3f;
 	const int MAX_RSC_NUM = 10;
+	
 	const std::string Zhu_Wilhelm_TYPE   = "Zhu_Wilhelm_Testbed";
 	const std::string Zhu_Wilhelm_FOLDER = "D:\\My.C++\\MyPulseForCSP\\Instance\\" + Zhu_Wilhelm_TYPE +"\\";
 	const std::string Santos_FOLDER      = "D:\\My.C++\\MyPulseForCSP\\Instance\\SantosTestbed\\";
 	const std::string SOLUTION_FILE      = "D:\\My.C++\\MyPulseForCSP\\Solution\\log.csv";
-	
-	template <typename T>
-	using PriorityQueue = std::priority_queue<T>;
 
 	static std::map<std::string, Weight> resultMap = {
 		{ "rcsp1.txt", 131 },{ "rcsp2.txt", 131 },{ "rcsp3.txt", 2 },{ "rcsp4.txt", 2 },

@@ -33,12 +33,20 @@ void MyPulse::changeLabels(ID curr, Weight cost, List<Resource>& consumptions) {
 	}
 }
 
+//bool MyPulse::checkDominance(ID curr, Weight cost, List<Resource>& consumptions) {
+//	if ((cost >= dominance_labels[curr][0].cost && !compareResources(dominance_labels[curr][0].resource, consumptions))
+//	||  (cost >= dominance_labels[curr][1].cost && !compareResources(dominance_labels[curr][1].resource, consumptions))
+//	||  (cost >= dominance_labels[curr][2].cost && !compareResources(dominance_labels[curr][2].resource, consumptions))
+//	) { return false; }
+//	return true;
+//}
+
 bool MyPulse::checkDominance(ID curr, Weight cost, List<Resource>& consumptions) {
-	if ((cost > dominance_labels[curr][0].cost || compareResources(consumptions, dominance_labels[curr][0].resource)) 
-	&&  (cost > dominance_labels[curr][1].cost || compareResources(consumptions, dominance_labels[curr][1].resource))
-	&&  (cost > dominance_labels[curr][2].cost || compareResources(consumptions, dominance_labels[curr][2].resource))
-		) { return false; }
-	return true;
+	if (cost < dominance_labels[curr][0].cost || compareResources(dominance_labels[curr][0].resource, consumptions)
+	&& cost < dominance_labels[curr][1].cost || compareResources(dominance_labels[curr][1].resource, consumptions)
+	&& cost < dominance_labels[curr][2].cost || compareResources(dominance_labels[curr][2].resource, consumptions)
+	) { return true; }
+	return false;
 }
 
 bool MyPulse::checkFeasibility(ID curr, List<Resource> &consumptions) {
