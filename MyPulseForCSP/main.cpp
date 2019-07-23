@@ -86,11 +86,9 @@ void runZhuWilhelm() {
 		LARGE_INTEGER t2;
 		double duration;
 		QueryPerformanceFrequency(&nFreq);
-		//std::clock_t start = std::clock();
 		QueryPerformanceCounter(&t1);
 		myPulse.run();
 		QueryPerformanceCounter(&t2);
-		//duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 		duration = (t2.QuadPart - t1.QuadPart) / (double)nFreq.QuadPart;
 		std::cout << file_data.name << " duration: " << duration << std::endl;
 
@@ -110,7 +108,7 @@ void runZhuWilhelm() {
 }
 
 // SantosTestbed
-void runSantosTestbed(double P) {
+void runSantosTestbed() {
 	std::ofstream logFile(SOLUTION_FILE, std::ios::app);
 	std::string file1_name = Santos_FOLDER + "File1.txt";
 	std::string file2_name = Santos_FOLDER + "File2.TXT";
@@ -130,7 +128,6 @@ void runSantosTestbed(double P) {
 		int node_num, edge_num, sum_time_pathA, sum_time_pathB;
 		ID src = 1, dst;
 		file1 >> node_num >> edge_num >> sum_time_pathA >> sum_time_pathB >> dst;
-		List<Resource> max_capacity(1, round(P*(sum_time_pathA - sum_time_pathB)) + sum_time_pathB);
 
 		// Read File2.TXT
 		int index = 1;
@@ -155,35 +152,30 @@ void runSantosTestbed(double P) {
 			if (!(file3 >> network_id_3)) { break; }
 		}
 
-		std::string instance_name = "SantosTestbed" + std::to_string(network_id) 
-			+ ".p" + std::to_string(int(P*10)) + "n" + std::to_string(node_num) 
-			+ "e" + std::to_string(edge_num) + "c" + std::to_string(max_capacity[0]);
+		List<double> PList = { 0.1, 0.2, 0.4, 0.6, 0.8 };
+		for (double P : PList) {
+			List<Resource> max_capacity(1, round(P*(sum_time_pathA - sum_time_pathB)) + sum_time_pathB);
+			MyPulse myPulse(src, dst, adjList, max_capacity);
 
-		MyPulse myPulse(src, dst, adjList, max_capacity);
+			std::string instance_name = "SantosTestbed" + std::to_string(network_id)
+				+ ".p" + std::to_string(int(P * 10)) + "n" + std::to_string(node_num)
+				+ "e" + std::to_string(edge_num) + "c" + std::to_string(max_capacity[0]);
 
-		LARGE_INTEGER nFreq;
-		LARGE_INTEGER t1;
-		LARGE_INTEGER t2;
-		double duration;
-		QueryPerformanceFrequency(&nFreq);
-		//std::clock_t start = std::clock();
-		QueryPerformanceCounter(&t1);
-		myPulse.run();
-		QueryPerformanceCounter(&t2);
-		//duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-		duration = (t2.QuadPart - t1.QuadPart) / (double)nFreq.QuadPart;
-		//std::cout << instance_name << " duration: " << duration << std::endl;
+			std::clock_t start = std::clock();
+			myPulse.run();
+			double duration = (std::clock() - start) / double(CLOCKS_PER_SEC);
+			std::cout << instance_name << " duration: " << duration << std::endl;
 
-		// record solution
-		std::ostringstream log;
-		log << instance_name << "," << myPulse.opt_path.distance << ","
-			<< std::setiosflags(std::ios::fixed) << std::setprecision(2) << duration << ",";
-		for (ID i : myPulse.opt_path.nodes) { log << i << " "; }
-		log << std::endl;
+			// record solution
+			std::ostringstream log;
+			log << instance_name << "," << P << "," << myPulse.opt_path.distance << "," << duration << ",";
+			for (ID i : myPulse.opt_path.nodes) { log << i << " "; }
+			log << std::endl;
 
-		logFile.seekp(0, std::ios::end);
-		if (logFile.tellp() <= 0) { logFile << "Instance,OptCost,Duration,Solution" << std::endl; }
-		logFile << log.str();
+			logFile.seekp(0, std::ios::end);
+			if (logFile.tellp() <= 0) { logFile << "Instance,P,OptCost,Duration,Solution" << std::endl; }
+			logFile << log.str();
+		}
 	}
 	logFile.close();
 }
@@ -193,7 +185,7 @@ int main(int argc, char *argv[]) {
 	if (argc == 1) { 
 		//renameInstance();
 		//runZhuWilhelm();
-		runSantosTestbed(0.8); // (p = 0.1, 0.2, 0.4, 0.6, and 0.8)
+		runSantosTestbed();
 	} 
 	else {
 		std::string instance = argv[1];

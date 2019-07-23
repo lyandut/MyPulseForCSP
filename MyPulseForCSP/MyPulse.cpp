@@ -1,4 +1,5 @@
 #include "MyPulse.h"
+#include <thread>
 
 MyPulse::MyPulse(ID src, ID dst, const AdjList<ID, Weight, Resource> &adjList, const List<Resource> &max_capacity)
 	: src(src), dst(dst), adjList(adjList), max_capacity(max_capacity) {
@@ -103,9 +104,19 @@ void MyPulse::initialization() {
 	dominance_labels.resize(node_num, List<Label>(3, { INF, List<Resource>(resource_num, INF) }));
 	lower_bound_cost.resize(node_num, 0);
 	lower_bound_consumptions.resize(node_num, List<Resource>(resource_num, 0));
-	for (ID i = -1; i < resource_num; ++i) { 
-		dijkstra(dst, i); 
-	}
+	
+	//for (ID i = -1; i < resource_num; ++i) { dijkstra(dst, i); }
+
+	List<std::thread> threads;
+	for (ID i = -1; i < resource_num; ++i) { threads.emplace_back(&MyPulse::dijkstra, this, dst, i); }
+	for (ID i = -1; i < resource_num; ++i) { threads[i + 1].join(); }
+	
+	// sort the adjList
+	//for (ID id = 0; id < node_num; ++id) {
+	//	std::sort(adjList[id].begin(), adjList[id].end(), [this](const AdjNode<ID, Weight, Resource> &node1, const AdjNode<ID, Weight, Resource> &node2) { 
+	//		return lower_bound_cost[node1.dst] < lower_bound_cost[node2.dst];
+	//	});
+	//}
 }
 
 void MyPulse::dijkstra(ID s, ID rsc_id) {
