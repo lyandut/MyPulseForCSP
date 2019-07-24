@@ -40,7 +40,6 @@ bool reader(std::string filename, AdjList<ID, Weight, Resource> &adjList, List<R
 		iss >> node_num >> edge_num >> src >> dst;
 		std::getline(file, line);
 		std::getline(file, line); iss.clear(); iss.str(line);
-		max_capacity.reserve(MAX_RSC_NUM);
 		while (iss >> tmp) { max_capacity.push_back(tmp); }
 		resource_num = int(max_capacity.size());
 	}

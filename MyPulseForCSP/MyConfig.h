@@ -4,16 +4,19 @@
 #include <queue>
 #include <map>
 
+#define INF 0x3f3f3f3f
+#define THREADS_DIJKSTRA  1
+#define SORT_ADJLIST_CUR  1
+#define SORT_ADJLIST_DST  0
+
 namespace lyan {
+
 	using ID = int;
 	using Weight = int;
 	using Resource = int;
 	
 	template <typename T>
 	using PriorityQueue = std::priority_queue<T>;
-	
-	const int INF = 0x3f3f3f3f;
-	const int MAX_RSC_NUM = 10;
 	
 	const std::string Zhu_Wilhelm_TYPE   = "Zhu_Wilhelm_Testbed";
 	//const std::string Zhu_Wilhelm_TYPE   = "Zhu_Wilhelm_DIMACS";

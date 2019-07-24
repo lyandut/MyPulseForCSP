@@ -7,6 +7,13 @@ MyPulse::MyPulse(ID src, ID dst, const AdjList<ID, Weight, Resource> &adjList, c
 	resource_num = int(max_capacity.size());
 	primal_bound = INF;
 	visited.resize(node_num, 0);
+	adjSortedIndex.resize(node_num);
+	for (ID id = 0; id < node_num; ++id) {
+		adjSortedIndex[id].resize(adjList[id].size());
+		for (ID index = 0; index < adjList[id].size(); ++index) { 
+			adjSortedIndex[id][index] = index;
+		}
+	}
 }
 
 bool MyPulse::compareResources(List<Resource>& r1, List<Resource>& r2) {
@@ -67,7 +74,8 @@ void MyPulse::pulseProcedure(ID curr, Weight cost, List<Resource> &consumptions,
 	changeLabels(curr, cost, consumptions);
 	path.nodes.push_back(curr);
 	Path<ID, Weight> opt_path; opt_path.distance = INF;
-	for (auto next : adjList[curr]) {
+	for (ID index : adjSortedIndex[curr]) {
+		auto next = adjList[curr][index];
 		if (visited[next.dst]) { continue; }
 
 		Weight new_cost = cost + next.weight;
@@ -104,19 +112,33 @@ void MyPulse::initialization() {
 	dominance_labels.resize(node_num, List<Label>(3, { INF, List<Resource>(resource_num, INF) }));
 	lower_bound_cost.resize(node_num, 0);
 	lower_bound_consumptions.resize(node_num, List<Resource>(resource_num, 0));
-	
-	//for (ID i = -1; i < resource_num; ++i) { dijkstra(dst, i); }
 
+#if THREADS_DIJKSTRA
 	List<std::thread> threads;
 	for (ID i = -1; i < resource_num; ++i) { threads.emplace_back(&MyPulse::dijkstra, this, dst, i); }
 	for (ID i = -1; i < resource_num; ++i) { threads[i + 1].join(); }
-	
-	// sort the adjList
-	//for (ID id = 0; id < node_num; ++id) {
-	//	std::sort(adjList[id].begin(), adjList[id].end(), [this](const AdjNode<ID, Weight, Resource> &node1, const AdjNode<ID, Weight, Resource> &node2) { 
-	//		return lower_bound_cost[node1.dst] < lower_bound_cost[node2.dst];
-	//	});
-	//}
+#else
+	for (ID i = -1; i < resource_num; ++i) { dijkstra(dst, i); }
+#endif
+
+#if SORT_ADJLIST_CUR
+	for (ID id = 0; id < node_num; ++id) {
+		std::sort(adjSortedIndex[id].begin(), adjSortedIndex[id].end(),
+			[id, this](const ID index1, const ID index2) {
+				return adjList[id][index1].weight < adjList[id][index2].weight;
+			}
+		);
+	}
+#elif SORT_ADJLIST_DST
+	for (ID id = 0; id < node_num; ++id) {
+		std::sort(adjSortedIndex[id].begin(), adjSortedIndex[id].end(),
+			[id, this](const ID index1, const ID index2) {
+				ID node1 = adjList[id][index1].dst, node2 = adjList[id][index2].dst;
+				return lower_bound_cost[node1] < lower_bound_cost[node2];
+			}
+		);
+}
+#endif
 }
 
 void MyPulse::dijkstra(ID s, ID rsc_id) {

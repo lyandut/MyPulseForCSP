@@ -44,7 +44,6 @@ void renameInstance() {
 			iss >> node_num >> edge_num >> src >> dst;
 			std::getline(file, line);
 			std::getline(file, line); iss.clear(); iss.str(line);
-			capacity.reserve(MAX_RSC_NUM);
 			while (iss >> tmp) { capacity.push_back(tmp); }
 			resource_num = int(capacity.size());
 		}

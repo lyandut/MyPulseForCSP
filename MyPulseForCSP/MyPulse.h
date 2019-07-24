@@ -26,11 +26,12 @@ private:
 	int node_num, resource_num;
 	ID src, dst;
 	AdjList<ID, Weight, Resource> adjList;
+	AdjList<ID, Weight, Resource> reverseGraph;
 	List<Resource> max_capacity;
 	Weight primal_bound;
 	List<int> visited;
+	List<List<ID>> adjSortedIndex;
 	
-	AdjList<ID, Weight, Resource> reverseGraph;
 	/* 
 	*  Pruning by dominance
 	* `dominance_labels[n][0]` is overwritten every time that a partial path exhibits a lower cost than the one stored, 
