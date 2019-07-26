@@ -75,7 +75,7 @@ void MyPulse::pulseProcedure(ID curr, Weight cost, List<Resource> &consumptions,
 	path.nodes.push_back(curr);
 	Path<ID, Weight> opt_path; opt_path.distance = INF;
 	for (ID index : adjSortedIndex[curr]) {
-		auto next = adjList[curr][index];
+		auto &next = adjList[curr][index];
 		if (visited[next.dst]) { continue; }
 
 		Weight new_cost = cost + next.weight;
@@ -105,7 +105,7 @@ void MyPulse::initialization() {
 
 	reverseGraph.resize(node_num);
 	for (ID id = 0; id < node_num; ++id) {
-		for (auto each : adjList[id]) {
+		for (auto &each : adjList[id]) {
 			reverseGraph[each.dst].emplace_back(id, each.weight, each.consumptions);
 		}
 	}
@@ -137,7 +137,7 @@ void MyPulse::initialization() {
 				return lower_bound_cost[node1] < lower_bound_cost[node2];
 			}
 		);
-}
+	}
 #endif
 }
 
@@ -153,8 +153,7 @@ void MyPulse::dijkstra(ID s, ID rsc_id) {
 	queue.push(vertexes[s]);
 	while (!queue.empty()) {
 		Vertex minVertex = queue.top(); queue.pop();
-		for (int i = 0; i < reverseGraph[minVertex.id].size(); ++i) {
-			AdjNode<ID, Weight, Resource> e = reverseGraph[minVertex.id][i];
+		for(auto &e : reverseGraph[minVertex.id]) {
 			Vertex &nextVertex = vertexes[e.dst];
 			auto new_dist = rsc_id < 0 ? (minVertex.dist + e.weight) : (minVertex.dist + e.consumptions[rsc_id]);
 			if (new_dist < nextVertex.dist) {

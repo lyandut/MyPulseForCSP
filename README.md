@@ -13,8 +13,8 @@ This paper is available at: http://dx.doi.org/10.1016/j.cor.2012.07.008.
 | #                                                            | 目的                                 | 求解效果                                                     |
 | :----------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------------ |
 | :white_check_mark: ​多线程                                    | 并行 dijkstra 算下界，提速初始化阶段 | Zhu_Wilhelm 效果不佳，部分算例速度下降；SantosTestbed 速度能提升50%左右。 |
-| :white_check_mark: 调整邻接矩阵顺序（优先考虑距离当前节点近的） | 优化分支顺序，使后续搜索可能提前剪枝 | Zhu_Wilhelm 效果不明显；SantosTestbed 速度较多线程版本继续有小幅度提升。 |
-| :white_large_square: 调整邻接矩阵顺序（优先考虑距离终点近的） | 优化分支顺序，使后续搜索可能提前剪枝 | Zhu_Wilhelm 效果不明显；SantosTestbed 速度表现不稳定，个别算例会一直递归... |
+| :white_check_mark: 调整邻接表顺序（优先考虑距离当前节点近的） | 优化分支顺序，使后续搜索可能提前剪枝 | Zhu_Wilhelm 效果不明显；SantosTestbed 速度较多线程版本继续有小幅度提升。 |
+| :white_large_square: 调整邻接表顺序（优先考虑距离终点近的）  | 优化分支顺序，使后续搜索可能提前剪枝 | Zhu_Wilhelm 效果不明显；SantosTestbed 速度表现不稳定，个别算例会一直递归... |
 | :white_large_square: 初始化阶段 dijkstra 算完路由下界后检查，符合资源约束直接返回最短路。 | 特例：最短路 = 资源约束最短路        | todo…                                                        |
 
 
